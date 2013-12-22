@@ -25,7 +25,7 @@ echo "Minecraft: Pocket Edition Loadbalancer\n";
 echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
 if(file_exists(SERVERS_CONF_FILENAME)) {
-	echo "Loading servers into array...";
+	echo "Loading servers into array...\n";
 	readAvailableServers();
 } else {
 	echo "First-time launch, creating new configuration file.\n";
@@ -39,7 +39,10 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 	}
 }
 echo "Starting the API...\n";
-exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/");
+if(stristr(exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/"), "not found")) {
+	echo "Screen not installed, exiting.\n"
+	die();
+}
 
 while(true) {
     $string = fgets($handle);
