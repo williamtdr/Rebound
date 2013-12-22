@@ -13,17 +13,19 @@
 		return $randomString;
 	}
 	if(file_exists(API_KEY_FILENAME)) {
-		$api_key = file(API_KEY_FILENAME,FILE_IGNORE_NEW_LINES)[0];
+		$f = fopen("../".API_KEY_FILENAME, 'r');
+		$api_key = fgets($f);
+		fclose($f);
 	} else {
 		echo "Generating new API key (".API_KEY_FILENAME.") @ ".API_KEY_LENGTH." chars.\n";
-		if(shell_exec("touch ".API_KEY_FILENAME) != "") {
+		if(shell_exec("touch ../".API_KEY_FILENAME) != "") {
 			echo "Failed to create API key file, aborting.\n";
 			die();
 		} else {
 			echo "Created API key file.\n";
 			$api_key = generateAPIkey();
 			echo "Your API key is: ".$api_key."\n";
-			$handle = fopen(API_KEY_FILENAME,"w");
+			$handle = fopen(API_KEY_FILENAME,"w+");
 			fwrite($handle,$api_key);
 			fclose($handle);
 		}
