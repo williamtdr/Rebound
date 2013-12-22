@@ -1,7 +1,7 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
-define("VERSION","1.0.3.0");
+define("VERSION","1.0.4.0");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
@@ -32,10 +32,6 @@ if(!(PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >=4)) {
 }
 
 function sig_handler() {
-	$f = fopen("api-pid", 'r');
-	$pid = fgets($f);
-	fclose($f);
-	exec("rm api-pid")
 	echo "Caught shutdown signal, killing API server...";
 	exec("kill $pid");
 }
@@ -50,6 +46,16 @@ $isEstablished = array();
 echo "Minecraft: Pocket Edition Loadbalancer v.".VERSION."\n";
 echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
+
+function generateAPIkey($length = API_KEY_LENGTH) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomString .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $randomString;
+}
+
 if(file_exists(SERVERS_CONF_FILENAME) == false) {
 	echo "First-time launch, creating new configuration file.\n";
 	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".\n";
@@ -79,15 +85,6 @@ if(file_exists(SERVERS_CONF_FILENAME) == false) {
 	fclose($f);
 }
 echo "Starting the API...\n";
-function generateAPIkey($length = API_KEY_LENGTH) {
-	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	$randomString = '';
-	for ($i = 0; $i < $length; $i++) {
-		$randomString .= $characters[rand(0, strlen($characters) - 1)];
-	}
-	return $randomString;
-}
-	
 if(exec("command -v screen") == "") {
 	echo "Screen isn't installed, and this program won't work without it. Installing.";
 	shell_exec("apt-get install screen");
@@ -98,7 +95,12 @@ if(exec("command -v screen") == "") {
 		echo "Screen installed successfully!";
 	}
 }
-exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/");
+
+$command = "screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/";
+$output = array(); 
+exec($command, $output);
+$pid = (int) $output[0];
+
 $time_taken = microtime(true) - $start;
 echo "Done! (".round($time_taken,4)."ms)\n";
 while(true) {
