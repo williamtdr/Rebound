@@ -1,6 +1,7 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
+define("VERSION","1.0.0.0");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
@@ -34,7 +35,7 @@ $netlog = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
 $isEstablished = array();
 
 /* MAIN TASK */
-echo "Minecraft: Pocket Edition Loadbalancer\n";
+echo "Minecraft: Pocket Edition Loadbalancer v.".VERSION."\n";
 echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
 	echo "First-time launch, creating new configuration file.\n";
