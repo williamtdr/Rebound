@@ -102,7 +102,7 @@ while(true) {
         if(!isset($isEstablished[$SOURCE_IP])) {
             $f_contents = file(SERVERS_CONF_FILENAME);
             if(filesize(SERVERS_CONF_FILENAME) == 0) {
-            	echo "Routing traffic for $SOURCE_IP failed: No available servers.";
+            	echo "Routing traffic for $SOURCE_IP failed: No available servers.\r";
             } else {
 		    $RAND_SERVER = $f_contents[array_rand($f_contents)];
 	            exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
