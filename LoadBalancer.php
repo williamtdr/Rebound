@@ -33,20 +33,10 @@ $netlog = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
 
 $isEstablished = array();
 
-$available_servers = array();
-
-function readAvailableServers() {
-	$available_servers = file(SERVERS_CONF_FILENAME, FILE_IGNORE_NEW_LINES);
-}
-
 /* MAIN TASK */
 echo "Minecraft: Pocket Edition Loadbalancer\n";
 echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
-if(file_exists(SERVERS_CONF_FILENAME)) {
-	echo "Loading servers into array...\n";
-	readAvailableServers();
-} else {
 	echo "First-time launch, creating new configuration file.\n";
 	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".\n";
 	if(shell_exec("touch ".SERVERS_CONF_FILENAME) != "") {
@@ -54,8 +44,7 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 		die();
 	} else {
 		exec("chmod 777 ".SERVERS_CONF_FILENAME);
-		echo "Created file successfully. Loading servers into array...\n";
-		readAvailableServers();
+		echo "Created file successfully.\n";
 	}
 }
 echo "Starting the API...\n";
@@ -101,16 +90,17 @@ $time_taken = microtime(true) - $start;
 echo "Done! (".round($time_taken,4)."ms)";
 while(true) {
     $string = fgets($netlog);
-	readAvailableServers();
     if(strpos($string, 'MCPE_NEW_CONNECTION') !== false) {
         preg_match_all("/SRC=.+?\..+?\..+?\..+?/", $string, $output);
         $SOURCE_IP = str_replace("SRC=", '', $output[0][0]);
         if(!isset($isEstablished[$SOURCE_IP])) {
             $RAND_SERVER = $available_servers[array_rand($available_servers)];
+            $f_contents = file(SERVERS_CONF_FILENAME);
+	    $RAND_SERVER = $f_contents[array_rand($f_contents)];
             exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
             $isEstablished[$SOURCE_IP] = true;
 			// add server disconnect check here
-            echo "NEW CONN SOURCE IP: $SOURCE_IP REDIRECT TO $RAND_SERVER\n";
+            echo "Recieved new connection from: $SOURCE_IP, redirecting to $RAND_SERVER.\n";
         }
     }
 }
