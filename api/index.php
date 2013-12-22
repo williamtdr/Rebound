@@ -31,6 +31,14 @@
 	if($_GET['apikey'] == $api_key) {
 		switch($_GET['method']) {
 			case "add_server":
+				if(is_string($_GET['server_id_str']) && stristr($_GET['server_id_str'],":")) {
+					$file = 'servers.conf';
+					$current = file_get_contents($file);
+					$current .= $_GET['server_id_str']."\n";
+					file_put_contents($file, $current);
+				} else {
+					echo "Invalid server string argument.";
+				}
 			break;
 			case "rem_server":
 			break;
