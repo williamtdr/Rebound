@@ -1,6 +1,7 @@
 <?php
 /* CONFIGURATION */
 define(SERVERS_CONF_FILENAME, "servers.conf");
+define(API_BIND_ADDR, "0.0.0.0");
 
 exec("/sbin/sysctl net.ipv4.ip_forward=1 ; /sbin/iptables --new POCKETMINELB ; /sbin/iptables --insert INPUT --proto udp --match state --state NEW --dport 19132 -j POCKETMINELB ; /sbin/iptables --insert POCKETMINELB --jump LOG --log-prefix=\"MCPE_NEW_CONNECTION \" ; /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE");
 
@@ -32,6 +33,8 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 		$this->readAvailableServers();
 	}
 }
+echo "Starting the API...";
+exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/");
 
 while(true) {
     $string = fgets($handle);
