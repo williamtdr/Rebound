@@ -1,7 +1,7 @@
 <?php
 	define("API_KEY_FILENAME","api.key");
 	define("API_KEY_LENGTH",30);
-	define("SERVER_CONF_FILENAME","servers.conf");
+	define("SERVERS_CONF_FILENAME","servers.conf");
 	$method = $_GET['method'];
 	$key = $_GET['apikey'];
 	if(file_exists("../".API_KEY_FILENAME)) {
@@ -16,7 +16,7 @@
 		switch($_GET['method']) {
 			case "add_server":
 				if(is_string($_GET['server_id_str']) && stristr($_GET['server_id_str'],":")) {
-					$file = SERVER_CONF_FILENAME;
+					$file = SERVERS_CONF_FILENAME;
 					$current = file_get_contents($file);
 					$current .= $_GET['server_id_str']."\n";
 					file_put_contents($file, $current);
@@ -26,14 +26,14 @@
 			break;
 			case "rem_server":
 				if(is_string($_GET['server_id_str']) && stristr($_GET['server_id_str'],":")) {
-					$data = file(SERVER_CONF_FILENAME);
+					$data = file(SERVERS_CONF_FILENAME);
 					$output = array();
 					foreach($data as $line) {
 						if(trim($line) != $_GET['server_id_str']) {
 							$output[] = $line;
 						}
 					}
-					 $fp = fopen(SERVER_CONF_FILENAME, "w+");
+					 $fp = fopen(SERVERS_CONF_FILENAME, "w+");
 					 flock($fp, LOCK_EX);
 					 foreach($out as $line) {
 						 fwrite($fp, $line);
