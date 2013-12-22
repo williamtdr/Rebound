@@ -11,7 +11,7 @@ $isEstablished = array();
 
 $available_servers = array();
 
-public function readAvailableServers() {
+function readAvailableServers() {
 	$available_servers = file(SERVERS_CONF_FILENAME, FILE_IGNORE_NEW_LINES);
 }
 
