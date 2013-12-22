@@ -6,6 +6,9 @@ define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
 define("API_KEY_LENGTH",30);
+pcntl_signal(SIGTERM, "sig_handler");
+pcntl_signal(SIGHUP,  "sig_handler");
+pcntl_signal(SIGUSR1, "sig_handler");
 
 if (0 != posix_getuid()) {
     echo "Please run this script as root\n.";
@@ -28,6 +31,11 @@ if(!(PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >=4)) {
 	echo "Using PHP < 5.4.0. API will fail to run.\n";
 }
 
+function sig_handler() {
+	echo "Caught shutdown signal, killing API server...";
+	exec("kill ".)
+}
+
 exec("/sbin/sysctl net.ipv4.ip_forward=1 ; /sbin/iptables --new POCKETMINELB ; /sbin/iptables --insert INPUT --proto udp --match state --state NEW --dport 19132 -j POCKETMINELB ; /sbin/iptables --insert POCKETMINELB --jump LOG --log-prefix=\"MCPE_NEW_CONNECTION \" ; /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE");
 
 $netlog = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
@@ -47,6 +55,19 @@ if(file_exists(SERVERS_CONF_FILENAME) == false) {
 	} else {
 		exec("chmod 777 ".SERVERS_CONF_FILENAME);
 		echo "Created file successfully.\n";
+		echo "Generating new API key (".API_KEY_FILENAME.") @ ".API_KEY_LENGTH." chars.\n";
+		if(shell_exec("touch ".API_KEY_FILENAME) != "") {
+			echo "Failed to create API key file, aborting.\n";
+			die();
+		} else {
+			echo "Created API key file.\n";
+			$api_key = generateAPIkey();
+			echo "Your API key is: ".$api_key."\n";
+			$handle = fopen(API_KEY_FILENAME,"w+");
+			fwrite($handle,$api_key);
+			fclose($handle);
+			exec("chmod 777 ".API_KEY_FILENAME);
+		}
 	}
 } else {
 	$f = fopen(SERVERS_CONF_FILENAME, 'r');
@@ -62,25 +83,7 @@ function generateAPIkey($length = API_KEY_LENGTH) {
 	}
 	return $randomString;
 }
-if(file_exists(API_KEY_FILENAME)) {
-	$f = fopen(API_KEY_FILENAME, 'r');
-	$api_key = fgets($f);
-	fclose($f);
-} else {
-	echo "Generating new API key (".API_KEY_FILENAME.") @ ".API_KEY_LENGTH." chars.\n";
-	if(shell_exec("touch ".API_KEY_FILENAME) != "") {
-		echo "Failed to create API key file, aborting.\n";
-		die();
-	} else {
-		echo "Created API key file.\n";
-		$api_key = generateAPIkey();
-		echo "Your API key is: ".$api_key."\n";
-		$handle = fopen(API_KEY_FILENAME,"w+");
-		fwrite($handle,$api_key);
-		fclose($handle);
-		exec("chmod 777 ".API_KEY_FILENAME);
-	}
-}
+	
 if(exec("command -v screen") == "") {
 	echo "Screen isn't installed, and this program won't work without it. Installing.";
 	shell_exec("apt-get install screen");
