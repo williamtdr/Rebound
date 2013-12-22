@@ -38,7 +38,7 @@ exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/");
 
 while(true) {
     $string = fgets($handle);
-	$this->readAvailableServers();
+	readAvailableServers();
     if(strpos($string, 'MCPE_NEW_CONNECTION') !== false) {
         preg_match_all("/SRC=.+?\..+?\..+?\..+?/", $string, $output);
         $SOURCE_IP = str_replace("SRC=", '', $output[0][0]);
