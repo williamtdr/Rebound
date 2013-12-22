@@ -68,7 +68,7 @@ function generateAPIkey($length = API_KEY_LENGTH) {
 	return $randomString;
 }
 if(file_exists(API_KEY_FILENAME)) {
-	$f = fopen("../".API_KEY_FILENAME, 'r');
+	$f = fopen(API_KEY_FILENAME, 'r');
 	$api_key = fgets($f);
 	fclose($f);
 } else {
