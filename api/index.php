@@ -2,6 +2,19 @@
 	define("API_KEY_FILENAME","api.key");
 	define("API_KEY_LENGTH",30);
 	define("SERVERS_CONF_FILENAME","servers.conf");
+	if($phpinstances != null) {
+		$output = array();
+		exec("pidof php | wc -w", $output;
+		$newinstances = $output[0];
+		if($newinstances <= $phpinstances) {
+			echo "Server no longer running, dying.";
+			die();
+		}
+	} else {
+		$output = array();
+		exec("pidof php | wc -w", $output;
+		$phpinstances = $output[0];
+	}
 	$method = $_GET['method'];
 	$key = $_GET['apikey'];
 	if(file_exists("../".API_KEY_FILENAME)) {
