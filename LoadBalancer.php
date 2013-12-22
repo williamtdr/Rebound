@@ -22,7 +22,7 @@ if (PHP_VERSION_ID < 50207) {
 }
 
 if(!(PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >=4)) {
-	echo "Using PHP < 5.4.0. API will fail to run.\n"
+	echo "Using PHP < 5.4.0. API will fail to run.\n";
 }
 
 exec("/sbin/sysctl net.ipv4.ip_forward=1 ; /sbin/iptables --new POCKETMINELB ; /sbin/iptables --insert INPUT --proto udp --match state --state NEW --dport 19132 -j POCKETMINELB ; /sbin/iptables --insert POCKETMINELB --jump LOG --log-prefix=\"MCPE_NEW_CONNECTION \" ; /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE");
