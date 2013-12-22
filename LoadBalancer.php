@@ -108,7 +108,7 @@ while(true) {
             } else {
             	    $f_contents = file(SERVERS_CONF_FILENAME);
 		    $RAND_SERVER = $f_contents[array_rand($f_contents)];
-	            if(stistr($RAND_SERVER,":") == false) {
+	            if(stristr($RAND_SERVER,":") == false) {
 	            	echo "Routing traffic for $SOURCE_IP failed: Server syntax error.\r";
 	            }
 	            exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
