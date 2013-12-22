@@ -100,7 +100,6 @@ while(true) {
         preg_match_all("/SRC=.+?\..+?\..+?\..+?/", $string, $output);
         $SOURCE_IP = str_replace("SRC=", '', $output[0][0]);
         if(!isset($isEstablished[$SOURCE_IP])) {
-            $RAND_SERVER = $available_servers[array_rand($available_servers)];
             $f_contents = file(SERVERS_CONF_FILENAME);
 	    $RAND_SERVER = $f_contents[array_rand($f_contents)];
             exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
