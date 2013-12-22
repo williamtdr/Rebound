@@ -62,7 +62,7 @@ if(stristr(exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/"), "
 	die();
 }
 $time_taken = microtime(true) - $start;
-echo "Done! ($time_takenms)";
+echo "Done! (".$time_taken."ms)";
 while(true) {
     $string = fgets($handle);
 	readAvailableServers();
