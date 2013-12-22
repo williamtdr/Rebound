@@ -85,10 +85,17 @@ if(file_exists(API_KEY_FILENAME)) {
 		fclose($handle);
 	}
 }
-if(stristr(exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/"), "not found")) {
-	echo "Screen not installed, exiting.\n";
-	die();
+if(exec("command -v screen") == "") {
+	echo "Screen isn't installed, and this program won't work without it. Installing.";
+	shell_exec("apt-get install screen");
+	if(exec("command -v screen") == "") {
+		echo "Screen install failed. Please install it manually. Exiting...";
+		die();
+	} else {
+		echo "Screen installed successfully!";
+	}
 }
+exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/");
 $time_taken = microtime(true) - $start;
 echo "Done! (".round($time_taken,4)."ms)";
 while(true) {
