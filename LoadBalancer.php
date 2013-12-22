@@ -38,6 +38,7 @@ $isEstablished = array();
 echo "Minecraft: Pocket Edition Loadbalancer v.".VERSION."\n";
 echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
+if(file_exists(SERVERS_CONF_FILENAME) == false) {
 	echo "First-time launch, creating new configuration file.\n";
 	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".\n";
 	if(shell_exec("touch ".SERVERS_CONF_FILENAME) != "") {
@@ -47,6 +48,10 @@ echo "Reading server configuration file...\n";
 		exec("chmod 777 ".SERVERS_CONF_FILENAME);
 		echo "Created file successfully.\n";
 	}
+} else {
+	$f = fopen(SERVERS_CONF_FILENAME, 'r');
+	$apikey = fgets($f);
+	fclose($f);
 }
 echo "Starting the API...\n";
 function generateAPIkey($length = API_KEY_LENGTH) {
