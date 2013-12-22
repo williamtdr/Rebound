@@ -4,7 +4,7 @@
 	define("SERVERS_CONF_FILENAME","servers.conf");
 	$method = $_GET['method'];
 	$key = $_GET['apikey'];
-	function generateAPIkey(API_KEY_LENGTH) {
+	function generateAPIkey($length = API_KEY_LENGTH) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$randomString = '';
 		for ($i = 0; $i < $length; $i++) {
