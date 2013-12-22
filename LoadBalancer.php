@@ -3,6 +3,11 @@
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_BIND_ADDR", "0.0.0.0");
 
+if (0 != posix_getuid()) {
+    echo "Please run this script as root.";
+    die();
+}
+
 exec("/sbin/sysctl net.ipv4.ip_forward=1 ; /sbin/iptables --new POCKETMINELB ; /sbin/iptables --insert INPUT --proto udp --match state --state NEW --dport 19132 -j POCKETMINELB ; /sbin/iptables --insert POCKETMINELB --jump LOG --log-prefix=\"MCPE_NEW_CONNECTION \" ; /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE");
 
 $handle = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
