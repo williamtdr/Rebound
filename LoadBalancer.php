@@ -26,7 +26,7 @@ echo "by sekjun9878, williamtdr\n";
 echo "Reading server configuration file...\n";
 if(file_exists(SERVERS_CONF_FILENAME)) {
 	echo "Loading servers into array...";
-	$this->readAvailableServers();
+	readAvailableServers();
 } else {
 	echo "First-time launch, creating new configuration file.\n";
 	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".\n";
