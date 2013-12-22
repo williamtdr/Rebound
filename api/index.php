@@ -62,7 +62,7 @@
 				}
 			break;
 			case "rem_player":
-				exec("/sbin/iptables -t nat -D PREROUTING --src ".$_GET
+				//exec("/sbin/iptables -t nat -D PREROUTING --src ".$_GET
 			break;
 			default:
 				echo "Invalid method.";
