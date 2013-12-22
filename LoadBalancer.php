@@ -16,24 +16,24 @@ function readAvailableServers() {
 }
 
 /* MAIN TASK */
-echo "Minecraft: Pocket Edition Loadbalancer";
-echo "by sekjun9878, williamtdr";
-echo "Reading server configuration file...";
+echo "Minecraft: Pocket Edition Loadbalancer\n";
+echo "by sekjun9878, williamtdr\n";
+echo "Reading server configuration file...\n";
 if(file_exists(SERVERS_CONF_FILENAME)) {
 	echo "Loading servers into array...";
 	$this->readAvailableServers();
 } else {
-	echo "First-time launch, creating new configuration file.";
-	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".";
+	echo "First-time launch, creating new configuration file.\n";
+	echo "You should stop this program and add some servers to ".SERVERS_CONF_FILENAME.".\n";
 	if(shell_exec("touch ".SERVERS_CONF_FILENAME) != "") {
-		echo "Failed to create configuration file, aborting.";
+		echo "Failed to create configuration file, aborting.\n";
 		die();
 	} else {
-		echo "Created file successfully. Loading servers into array...";
+		echo "Created file successfully. Loading servers into array...\n";
 		$this->readAvailableServers();
 	}
 }
-echo "Starting the API...";
+echo "Starting the API...\n";
 exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/");
 
 while(true) {
