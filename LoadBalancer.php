@@ -1,7 +1,7 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
-define("VERSION","1.0.1.1");
+define("VERSION","1.0.2.0");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
