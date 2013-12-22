@@ -51,6 +51,7 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 		echo "Failed to create configuration file, aborting.\n";
 		die();
 	} else {
+		exec("chmod 774 ".SERVERS_CONF_FILENAME);
 		echo "Created file successfully. Loading servers into array...\n";
 		readAvailableServers();
 	}
