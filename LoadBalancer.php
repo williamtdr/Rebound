@@ -40,7 +40,7 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 }
 echo "Starting the API...\n";
 if(stristr(exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8000 -t api/"), "not found")) {
-	echo "Screen not installed, exiting.\n"
+	echo "Screen not installed, exiting.\n";
 	die();
 }
 
