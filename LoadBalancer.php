@@ -1,7 +1,7 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
-define("VERSION","1.0.2.0");
+define("VERSION","1.0.2.1");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
@@ -100,10 +100,10 @@ while(true) {
         preg_match_all("/SRC=.+?\..+?\..+?\..+?/", $string, $output);
         $SOURCE_IP = str_replace("SRC=", '', $output[0][0]);
         if(!isset($isEstablished[$SOURCE_IP])) {
-            $f_contents = file(SERVERS_CONF_FILENAME);
             if(filesize(SERVERS_CONF_FILENAME) == 0) {
             	echo "Routing traffic for $SOURCE_IP failed: No available servers.\r";
             } else {
+            	    $f_contents = file(SERVERS_CONF_FILENAME);
 		    $RAND_SERVER = $f_contents[array_rand($f_contents)];
 	            if(stistr($RAND_SERVER,":") == false) {
 	            	echo "Routing traffic for $SOURCE_IP failed: Server syntax error.\r";
