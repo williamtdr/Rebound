@@ -4,31 +4,12 @@
 	define("SERVERS_CONF_FILENAME","servers.conf");
 	$method = $_GET['method'];
 	$key = $_GET['apikey'];
-	function generateAPIkey($length = API_KEY_LENGTH) {
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$randomString = '';
-		for ($i = 0; $i < $length; $i++) {
-			$randomString .= $characters[rand(0, strlen($characters) - 1)];
-		}
-		return $randomString;
-	}
-	if(file_exists(API_KEY_FILENAME)) {
+	if(file_exists("../".API_KEY_FILENAME)) {
 		$f = fopen("../".API_KEY_FILENAME, 'r');
 		$api_key = fgets($f);
 		fclose($f);
 	} else {
-		echo "Generating new API key (".API_KEY_FILENAME.") @ ".API_KEY_LENGTH." chars.\n";
-		if(shell_exec("touch ../".API_KEY_FILENAME) != "") {
-			echo "Failed to create API key file, aborting.\n";
-			die();
-		} else {
-			echo "Created API key file.\n";
-			$api_key = generateAPIkey();
-			echo "Your API key is: ".$api_key."\n";
-			$handle = fopen(API_KEY_FILENAME,"w+");
-			fwrite($handle,$api_key);
-			fclose($handle);
-		}
+		echo "Failed to find an API key - has the main process run?";
 	}
 	
 	if($_GET['apikey'] == $api_key) {
