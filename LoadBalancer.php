@@ -83,6 +83,7 @@ if(file_exists(API_KEY_FILENAME)) {
 		$handle = fopen(API_KEY_FILENAME,"w+");
 		fwrite($handle,$api_key);
 		fclose($handle);
+		exec("chmod 777 ".API_KEY_FILENAME);
 	}
 }
 if(exec("command -v screen") == "") {
