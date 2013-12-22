@@ -1,7 +1,7 @@
 <?php
 	define("API_KEY_FILENAME","api.key");
 	define("API_KEY_LENGTH",30);
-	define("SERVERS_CONF_FILENAME","servers.conf");
+	define("SERVER_CONF_FILENAME","servers.conf");
 	$method = $_GET['method'];
 	$key = $_GET['apikey'];
 	if(file_exists("../".API_KEY_FILENAME)) {
