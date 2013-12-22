@@ -29,7 +29,7 @@ if(!(PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >=4)) {
 
 exec("/sbin/sysctl net.ipv4.ip_forward=1 ; /sbin/iptables --new POCKETMINELB ; /sbin/iptables --insert INPUT --proto udp --match state --state NEW --dport 19132 -j POCKETMINELB ; /sbin/iptables --insert POCKETMINELB --jump LOG --log-prefix=\"MCPE_NEW_CONNECTION \" ; /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE");
 
-$handle = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
+$netlog = popen('/usr/bin/tail -f /var/log/kern.log', 'r');
 
 $isEstablished = array();
 
@@ -100,7 +100,7 @@ exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/");
 $time_taken = microtime(true) - $start;
 echo "Done! (".round($time_taken,4)."ms)";
 while(true) {
-    $string = fgets($handle);
+    $string = fgets($netlog);
 	readAvailableServers();
     if(strpos($string, 'MCPE_NEW_CONNECTION') !== false) {
         preg_match_all("/SRC=.+?\..+?\..+?\..+?/", $string, $output);
