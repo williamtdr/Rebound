@@ -93,7 +93,7 @@ if(exec("command -v screen") == "") {
 }
 exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/");
 $time_taken = microtime(true) - $start;
-echo "Done! (".round($time_taken,4)."ms)";
+echo "Done! (".round($time_taken,4)."ms)\n";
 while(true) {
     $string = fgets($netlog);
     if(strpos($string, 'MCPE_NEW_CONNECTION') !== false) {
@@ -105,6 +105,9 @@ while(true) {
             	echo "Routing traffic for $SOURCE_IP failed: No available servers.\r";
             } else {
 		    $RAND_SERVER = $f_contents[array_rand($f_contents)];
+	            if(stistr($RAND_SERVER,":") == false) {
+	            	echo "Routing traffic for $SOURCE_IP failed: Server syntax error.\r";
+	            }
 	            exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
 	            $isEstablished[$SOURCE_IP] = true;
 				// add server disconnect check here
