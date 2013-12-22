@@ -6,9 +6,6 @@ define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
 define("API_KEY_LENGTH",30);
-pcntl_signal(SIGTERM, "sig_handler");
-pcntl_signal(SIGHUP,  "sig_handler");
-pcntl_signal(SIGUSR1, "sig_handler");
 
 if (0 != posix_getuid()) {
     echo "Please run this script as root\n.";
@@ -96,10 +93,7 @@ if(exec("command -v screen") == "") {
 	}
 }
 
-$command = "screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/";
-$output = array(); 
-exec($command, $output);
-$pid = (int) $output[0];
+exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/", $output);
 
 $time_taken = microtime(true) - $start;
 echo "Done! (".round($time_taken,4)."ms)\n";
