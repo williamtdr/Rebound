@@ -1,10 +1,11 @@
 <?php
+$start = microtime(true);
 /* CONFIGURATION */
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_BIND_ADDR", "0.0.0.0");
 
 if (0 != posix_getuid()) {
-    echo "Please run this script as root.";
+    echo "Please run this script as root\n.";
     die();
 }
 
@@ -59,7 +60,8 @@ if(stristr(exec("screen -dmS PMLB-API php -S ".API_BIND_ADDR.":8007 -t api/"), "
 	echo "Screen not installed, exiting.\n";
 	die();
 }
-
+$time_taken = microtime(true) - $start;
+echo "Done! ($time_takenms)";
 while(true) {
     $string = fgets($handle);
 	readAvailableServers();
