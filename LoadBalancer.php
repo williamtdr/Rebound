@@ -30,7 +30,7 @@ if(file_exists(SERVERS_CONF_FILENAME)) {
 		die();
 	} else {
 		echo "Created file successfully. Loading servers into array...\n";
-		$this->readAvailableServers();
+		readAvailableServers();
 	}
 }
 echo "Starting the API...\n";
