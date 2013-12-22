@@ -2,6 +2,7 @@
 $start = microtime(true);
 /* CONFIGURATION */
 define("SERVERS_CONF_FILENAME", "servers.conf");
+define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
 define("API_KEY_LENGTH",30);
 
