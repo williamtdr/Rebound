@@ -1,14 +1,14 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
-define("VERSION","1.0.5.1");
+define("VERSION","1.0.5.2");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
 define("API_KEY_LENGTH",30);
 define("BIND_TO","wlan0");
 
-if (0 != posix_getuid()) {
+if (0 != posix_getuid()) {
     echo "Please run this script as root\n.";
     die();
 }
@@ -67,7 +67,7 @@ if(file_exists(SERVERS_CONF_FILENAME) == false) {
 		if(shell_exec("touch ".API_KEY_FILENAME) != "") {
 			echo "Failed to create API key file, aborting.\n";
 			die();
-		} else {
+		} else {
 			echo "Created API key file.\n";
 			$api_key = generateAPIkey();
 			echo "Your API key is: ".$api_key."\n";
@@ -124,7 +124,7 @@ while(true) {
 }
 echo "Closing file handler...";
 pclose($netlog);
-echo "Cleaning up iptables..."
+echo "Cleaning up iptables...";
 exec("/sbin/iptables flush");
 echo "Shutting down proxy.";
 ?>
