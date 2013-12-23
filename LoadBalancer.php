@@ -112,7 +112,9 @@ while(true) {
 	            if(stristr($RAND_SERVER,":") == false) {
 	            	echo "Routing traffic for $SOURCE_IP failed: Server syntax error.\r";
 	            }
-	            exec("/sbin/iptables -t nat -A PREROUTING -i ".BIND_TO." --src $SOURCE_IP -p udp -j DNAT --to-destination $RAND_SERVER");
+	            exec("/sbin/iptables --table nat -i ".BIND_TO." --append PREROUTING --src $SOURCE_IP --proto udp --dport 19132 --jump DNAT --to-destination $RAND_SERVER");
+            		$isEstablished[$SOURCE_IP]['time'] = time();
+        		$isEstablished[$SOURCE_IP]['destination'] = $RAND_SERVER;
 	            $isEstablished[$SOURCE_IP] = true;
 				// add server disconnect check here
 	            echo "Recieved new connection from: $SOURCE_IP, redirecting to $RAND_SERVER.\n";
@@ -120,4 +122,9 @@ while(true) {
         }
     }
 }
+echo "Closing file handler...";
+pclose($netlog);
+echo "Cleaning up iptables..."
+exec("/sbin/iptables flush");
+echo "Shutting down proxy.";
 ?>
