@@ -1,11 +1,12 @@
 <?php
 $start = microtime(true);
 /* CONFIGURATION */
-define("VERSION","1.0.4.2");
+define("VERSION","1.0.5.0");
 define("SERVERS_CONF_FILENAME", "servers.conf");
 define("API_KEY_FILENAME","api.key");
 define("API_BIND_ADDR", "0.0.0.0");
 define("API_KEY_LENGTH",30);
+define("BIND_TO","wlan0");
 
 if (0 != posix_getuid()) {
     echo "Please run this script as root\n.";
@@ -111,7 +112,7 @@ while(true) {
 	            if(stristr($RAND_SERVER,":") == false) {
 	            	echo "Routing traffic for $SOURCE_IP failed: Server syntax error.\r";
 	            }
-	            exec("/sbin/iptables -t nat -A PREROUTING --src $SOURCE_IP --proto udp --dport 19132 -j DNAT --to-destination $RAND_SERVER");
+	            exec("/sbin/iptables -t nat -A PREROUTING -i ".BIND_TO." --src $SOURCE_IP -p udp -j DNAT --to-destination $RAND_SERVER");
 	            $isEstablished[$SOURCE_IP] = true;
 				// add server disconnect check here
 	            echo "Recieved new connection from: $SOURCE_IP, redirecting to $RAND_SERVER.\n";
